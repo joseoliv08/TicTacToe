@@ -1,0 +1,162 @@
+*, *::after, *::before {
+    box-sizing: border-box;
+  }
+  
+:root {
+--cell-size: 100px;
+--mark-size: calc(var(--cell-size) * .9);
+}
+
+body {
+margin: 0;
+}
+
+.board {
+width: 100vw;
+height: 100vh;
+display: grid;
+justify-content: center;
+align-content: center;
+justify-items: center;
+align-items: center;
+grid-template-columns: repeat(3, auto)
+}
+
+.cell {
+width: var(--cell-size);
+height: var(--cell-size);
+border: 1px solid black;
+display: flex;
+justify-content: center;
+align-items: center;
+position: relative;
+cursor: pointer;
+}
+
+.cell:first-child,
+.cell:nth-child(2),
+.cell:nth-child(3) {
+border-top: none;
+}
+
+.cell:nth-child(3n + 1) {
+border-left: none;
+}
+
+.cell:nth-child(3n + 3) {
+border-right: none;
+}
+
+.cell:last-child,
+.cell:nth-child(8),
+.cell:nth-child(7) {
+border-bottom: none;
+}  
+
+/*When hovering in an already marked zone, cursor change to 'not allowed'*/
+.cell.x,
+.cell.circle {
+    cursor: not-allowed;
+}
+
+.cell.x::before,
+.cell.x::after {
+    background-color: black;
+}
+
+.cell.circle::before,
+.cell.circle::after {
+    background-color: black;
+}
+
+/*When hovering an empty zone, display the X or O, we have to go to our board when it has the X or O classe applyed to it*/
+.board.x .cell:not(.x):not(.circle):hover::before,
+.board.x .cell:not(.x):not(.circle):hover::after {
+    background-color: lightgrey;
+}
+
+.board.circle .cell:not(.x):not(.circle):hover::before,
+.board.circle .cell:not(.x):not(.circle):hover::after {
+    background-color: lightgrey;
+}
+
+/*X mark styling, originating two black columns*/
+.cell.x::before,
+.cell.x::after,
+.board.x .cell:not(.x):not(.circle):hover::before, /*the not(.x) not(.circle) is for when hovering, only appear the sign in the empty zones and not in the zones already marked*/
+.board.x .cell:not(.x):not(.circle):hover::after {
+  content: '';
+  position: absolute;
+  width: calc(var(--mark-size) * .15);
+  height: var(--mark-size);
+}
+
+.cell.cell.x::before,
+.board.x .cell:not(.x):not(.circle):hover::before {
+    transform: rotate(45deg);
+}
+
+.cell.cell.x::after,
+.board.x .cell:not(.x):not(.circle):hover::after {
+    transform: rotate(-45deg);
+}
+
+/*O mark styling, originating two black columns*/
+.cell.circle::before,
+.cell.circle::after,
+.board.circle .cell:not(.x):not(.circle):hover::before,
+.board.circle .cell:not(.x):not(.circle):hover::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+}
+
+/*For the designing of the circle two bars with radius were created one in black and the other in white (after circle code)*/
+.cell.circle::before,
+.board.circle .cell:not(.x):not(.circle):hover::before {
+    width: var(--mark-size);
+    height: var(--mark-size);
+}
+
+.cell.circle::after,
+.board.circle .cell:not(.x):not(.circle):hover::after {
+    width: calc(var(--mark-size) * .7);
+    height: calc(var(--mark-size) * .7);
+    background-color: white;
+}
+
+/*Style the winning message display*/
+.winning-message {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, .9);
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 5rem;
+    flex-direction: column ;
+}
+
+.winning-message button {
+    font-size: 3rem;
+    background-color: white;
+    border: 1px solid black;
+    padding: .25em .5em;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.winning-message button:hover {
+    background-color: black;
+    color: white;
+    border-color: white;
+}
+
+/*class created on winning message to only display after win or being called*/
+.winning-message.show {
+    display: flex; 
+}
